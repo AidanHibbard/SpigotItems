@@ -1,0 +1,9 @@
+main: me.AidanHibbard.SpringBoots.Main
+name: SpringBoots
+version: 0.1
+author: Aidan Hibbard
+api-version: 1.16
+commands:
+  springboots:
+    usage: /springboots
+    description: Receive some boots
