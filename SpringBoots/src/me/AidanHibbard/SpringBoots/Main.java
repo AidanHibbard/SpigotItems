@@ -11,15 +11,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin{
+public class Main extends JavaPlugin implements Listener{
 	@Override
 	public void onEnable() {
 		//Server Startup / Reloads
+		this.getServer().getPluginManager().registerEvents(this, this);
 	}
 	@Override
 	public void onDisable() {
@@ -50,7 +54,7 @@ public class Main extends JavaPlugin{
 		ItemStack boots = new ItemStack(Material.CHAINMAIL_BOOTS);
 		// Create the Meta object, Set the name
 		ItemMeta meta = boots.getItemMeta();
-		meta.setDisplayName(ChatColor.DARK_PURPLE + getName());
+		meta.setDisplayName(ChatColor.DARK_PURPLE + "Boots of zoom");
 		// Create the description
 		List<String> lore = new ArrayList<String>();
 		lore.add("");
@@ -67,5 +71,19 @@ public class Main extends JavaPlugin{
 		boots.setItemMeta(meta);
 		
 		return boots;
+	}
+	@EventHandler
+	public void onJump(PlayerMoveEvent event) {
+		Player player = (Player) event.getPlayer();
+		if (player.getInventory().getBoots() != null) {
+			if (player.getInventory().getBoots().getItemMeta().getDisplayName().contains("Boots of zoom")) {
+				if (player.getInventory().getBoots().getItemMeta().hasLore()) {
+					if (event.getFrom().getY() < event.getTo().getY() &&
+							player.getLocation().subtract(0, 1, 0).getBlock().getType() != Material.AIR) {
+								player.setVelocity(player.getLocation().getDirection().multiply(2).setY(2));
+					}
+				}
+			}
+		}
 	}
 }
