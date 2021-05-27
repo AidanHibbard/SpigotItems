@@ -13,6 +13,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -81,6 +83,21 @@ public class Main extends JavaPlugin implements Listener{
 					if (event.getFrom().getY() < event.getTo().getY() &&
 							player.getLocation().subtract(0, 1, 0).getBlock().getType() != Material.AIR) {
 								player.setVelocity(player.getLocation().getDirection().multiply(2).setY(2));
+					}
+				}
+			}
+		}
+	}
+	@EventHandler
+	public void onFall(EntityDamageEvent event) {
+		if (event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			if (event.getCause() == DamageCause.FALL || event.getCause() == DamageCause.FLY_INTO_WALL) {
+				if (player.getInventory().getBoots() != null) {
+					if (player.getInventory().getBoots().getItemMeta().getDisplayName().contains("Boots of zoom")) {
+						if (player.getInventory().getBoots().getItemMeta().hasLore()) {
+							event.setCancelled(true);
+						}
 					}
 				}
 			}
